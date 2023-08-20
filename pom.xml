@@ -23,6 +23,13 @@
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.rocksdb/rocksdbjni -->
         <dependency>
+            <groupId>net.schmizz</groupId>
+            <artifactId>sshj</artifactId>
+            <version>0.10.0</version>
+        </dependency>
+
+
+        <dependency>
             <groupId>org.rocksdb</groupId>
             <artifactId>rocksdbjni</artifactId>
             <version>8.3.2</version>

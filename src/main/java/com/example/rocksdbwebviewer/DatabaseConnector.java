@@ -4,9 +4,15 @@ import com.example.rocksdbwebviewer.databaseconfiguration.DatabaseConfiguration;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.schmizz.sshj.SSHClient;
+import net.schmizz.sshj.connection.channel.direct.Session;
+import net.schmizz.sshj.connection.channel.forwarded.RemotePortForwarder;
+import net.schmizz.sshj.transport.verification.PromiscuousVerifier;
 import org.rocksdb.Options;
 import org.rocksdb.RocksDB;
 import org.rocksdb.RocksIterator;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,29 +23,22 @@ public class DatabaseConnector {
     String databasePath;
     RocksDB rocksDB;
 
+
     public DatabaseConnector(DatabaseConfiguration databaseConfiguration) {
-        if(databaseConfiguration.sshHost.isEmpty())
             createConnectionFromRemote(databaseConfiguration);
-        createConnectionFromSsh(databaseConfiguration);
     }
-    private void createConnectionFromRemote(DatabaseConfiguration databaseConfiguration){
+    private void createConnectionFromRemote(DatabaseConfiguration databaseConfiguration) {
+        Process sshProcess = null;
         try {
+
+            // Wait a bit to ensure the tunnel is established
             RocksDB.loadLibrary();
             Options options = new Options();
             rocksDB = RocksDB.openReadOnly(options, databaseConfiguration.databasePath);
         } catch (Exception e) {
-
         }
     }
-    private void createConnectionFromSsh(DatabaseConfiguration databaseConfiguration){
-        String sshHost = "ssh-server";
-        int sshPort = 1; // SSH port
 
-        int localPort = 12345; // Local port for tunnel
-        String remoteHost = "rocksdb-hostname";
-        int remotePort = 1234; // RocksDB port on the remote server
-
-    }
 
     public void closeDatabaseConnection(){
         if(this.rocksDB == null)
